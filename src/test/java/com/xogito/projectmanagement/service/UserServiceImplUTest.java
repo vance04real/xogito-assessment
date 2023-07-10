@@ -51,7 +51,6 @@ public class UserServiceImplUTest {
 
     @InjectMocks
     private UserServiceImpl userService;
-
     @Mock
     private UserRepository userRepository;
 
@@ -63,7 +62,7 @@ public class UserServiceImplUTest {
     }
 
     @Test
-    public void givenRequestToCreateUser_ShouldThrowUserAlreadyExistsException() {
+    public void givenRequestToCreateUser_ShouldThrowUserAlreadyExistsException() throws XogitoUserException {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setEmail("user@xogito.com");
         createUserRequest.setName("Test User");
@@ -87,6 +86,7 @@ public class UserServiceImplUTest {
         assertEquals(HttpStatus.CREATED.value(), response.getCode());
         assertEquals(AppConstants.USER_CREATED_SUCCESSFUL, response.getMessage());
         verify(userRepository, times(1)).save(any(User.class));
+
     }
 
     @Test
@@ -173,11 +173,12 @@ public class UserServiceImplUTest {
         assertEquals(1, response.getUsers().getNumberOfElements());
     }
 
+
     @Test
     public void givenValidRequest_whenSearchingUsers_shouldReturnSuccess() {
         User user = User.builder()
                 .email("test@xogito.com")
-                .name("Test User")
+                .name("Test")
                 .build();
 
         List<User> userList = new ArrayList<>();
@@ -193,7 +194,7 @@ public class UserServiceImplUTest {
         assertEquals(HttpStatus.OK.value(), response.getCode());
         assertEquals(AppConstants.USER_RETRIEVED_SUCCESSFUL, response.getMessage());
         assertNotNull(response.getUsers());
-        assertEquals(1, response.getUsers().getNumberOfElements());
+          assertEquals(1, response.getUsers().getNumberOfElements());
     }
 
 }

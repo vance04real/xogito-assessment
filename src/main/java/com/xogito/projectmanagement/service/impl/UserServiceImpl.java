@@ -95,6 +95,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse findUserById(Long id) {
+
+        var user = userRepository.findUserById(id);
+
+        if(user.getTotalElements() == 0){
+            throw  new NotFoundException(AppConstants.PROJECT_NOT_FOUND);
+        }
+
+        return UserResponse.builder()
+                .message(AppConstants.PROJECT_RETRIEVED_SUCCESSFUL)
+                .code(HttpStatus.OK.value())
+                .users(user)
+                .build();
+    }
+
+    @Override
     public ApiResponse updateUser(Long id, UpdateUserRequest updateUserRequest) {
 
         var user = userRepository.findById(id).orElseThrow(()-> new NotFoundException(AppConstants.USER_NOT_FOUND));

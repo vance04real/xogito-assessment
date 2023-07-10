@@ -40,9 +40,15 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateProject(@PathVariable Long id, @RequestBody UpdateProjectRequest updateProjectRequest) {
+    public ResponseEntity<ApiResponse> updateProject(@PathVariable Long id, @RequestBody @Valid UpdateProjectRequest updateProjectRequest) {
         ApiResponse apiResponse = projectService.updateProject(id, updateProjectRequest);
 
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectResponse> retrieveProject(@PathVariable Long id) {
+        ProjectResponse apiResponse = projectService.findProjectById(id);
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -101,7 +107,7 @@ public class ProjectController {
     }
 
     @PostMapping("/assignUser")
-    public ResponseEntity<ApiResponse> assignProject(@RequestBody UserProjectAssignmentRequest userProjectAssignmentRequest) {
+    public ResponseEntity<ApiResponse> assignProject(@RequestBody @Valid UserProjectAssignmentRequest userProjectAssignmentRequest) {
 
         ApiResponse apiResponse = projectService.assignProjectToUser(userProjectAssignmentRequest);
 

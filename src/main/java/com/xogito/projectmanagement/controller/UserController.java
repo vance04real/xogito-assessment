@@ -61,8 +61,14 @@ public class UserController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> retrieveProject(@PathVariable Long id) {
+        UserResponse apiResponse = userService.findUserById(id);
+        return ResponseEntity.ok(apiResponse);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<ApiResponse> updateUser(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest updateUserRequest) {
         ApiResponse apiResponse = userService.updateUser(id, updateUserRequest);
         return ResponseEntity.ok(apiResponse);
     }

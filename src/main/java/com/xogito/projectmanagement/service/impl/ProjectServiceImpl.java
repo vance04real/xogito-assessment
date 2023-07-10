@@ -110,6 +110,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ProjectResponse findProjectById(long id) {
+
+        var project = projectRepository.findProjectById(id);
+
+        if(project.getTotalElements() == 0){
+            throw  new NotFoundException(AppConstants.PROJECT_NOT_FOUND);
+        }
+
+        return ProjectResponse.builder()
+                .message(AppConstants.PROJECT_RETRIEVED_SUCCESSFUL)
+                .code(HttpStatus.OK.value())
+                .projectList(project)
+                .build();
+    }
+
+    @Override
     public ApiResponse deleteProject(Long id) {
         try {
             projectRepository.deleteById(id);

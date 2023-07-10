@@ -17,6 +17,7 @@ public interface ProjectRepository extends JpaRepository <Project, Long >{
     Page<Project> findProjectByNameIgnoreCase(String name, Pageable pageable);
     Optional<Project> findProjectByNameIgnoreCase(String name);
     Page<ProjectProjection> findBy(Pageable pageable);
+    Page<Project> findProjectById(Long id);
 
     @Query("SELECT p FROM Project p LEFT JOIN p.assignedUsers u WHERE u IS NULL")
     Page<Project> findProjectsWithNoUsersAssignedToThem(Pageable pageable);
