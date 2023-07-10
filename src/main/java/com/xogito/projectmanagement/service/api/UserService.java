@@ -12,7 +12,7 @@ public interface UserService {
   UserResponse findAllUsers(Pageable pageable);
   UserResponse searchUsers(String name, String email, Pageable pageable);
   ApiResponse deleteUser(Long id);
-  UserResponse findUserById(Long id);
+  UserResponse findUserById(Long id, Pageable pageable);
   ApiResponse updateUser(Long id, UpdateUserRequest updateUserRequest);
 
 }

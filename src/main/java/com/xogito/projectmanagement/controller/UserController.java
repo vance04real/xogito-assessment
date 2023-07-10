@@ -62,8 +62,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> retrieveProject(@PathVariable Long id) {
-        UserResponse apiResponse = userService.findUserById(id);
+    public ResponseEntity<UserResponse> retrieveProject(@PathVariable Long id, @RequestParam(defaultValue = "0", required = false)
+    Integer page,
+                                                        @RequestParam(defaultValue = "5", required = false)
+                                                            Integer pageSize) {
+        Pageable paging = PageRequest.of(page, pageSize);
+        UserResponse apiResponse = userService.findUserById(id,paging);
         return ResponseEntity.ok(apiResponse);
     }
 

@@ -172,6 +172,16 @@ public class ProjectServiceImplUTest {
     }
 
     @Test
+    public void deleteProject_ShouldReturnApiResponseWithSuccessfulMessageAndStatusCode() {
+        doNothing().when(projectRepository).deleteById(anyLong());
+
+        ApiResponse response = projectService.deleteProject(1L);
+
+        assertThat(response.getMessage()).isEqualTo(AppConstants.PROJECT_DELETE_SUCCESSFUL);
+        assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
     public void searchProjects_ShouldReturnProjectResponseWithResults() {
 
         Pageable pageable = PageRequest.of(0, 10);
@@ -205,15 +215,7 @@ public class ProjectServiceImplUTest {
         assertThat(response.getCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
-    @Test
-    public void deleteProject_ShouldReturnApiResponseWithSuccessfulMessageAndStatusCode() {
-        doNothing().when(projectRepository).deleteById(anyLong());
 
-        ApiResponse response = projectService.deleteProject(1L);
-
-        assertThat(response.getMessage()).isEqualTo(AppConstants.PROJECT_DELETE_SUCCESSFUL);
-        assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());
-    }
 
     @Test
     public void deleteProject_ShouldThrowXogitoUserException_WhenProjectNotFound() {

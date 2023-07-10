@@ -95,9 +95,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse findUserById(Long id) {
+    public UserResponse findUserById(Long id, Pageable pageable) {
 
-        var user = userRepository.findUserById(id);
+        var user = userRepository.findUserById(id, pageable);
 
         if(user.getTotalElements() == 0){
             throw  new NotFoundException(AppConstants.PROJECT_NOT_FOUND);

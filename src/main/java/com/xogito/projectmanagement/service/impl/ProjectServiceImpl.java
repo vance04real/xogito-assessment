@@ -110,9 +110,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectResponse findProjectById(long id) {
+    public ProjectResponse findProjectById(long id, Pageable pageable) {
 
-        var project = projectRepository.findProjectById(id);
+        var project = projectRepository.findProjectById(id, pageable);
 
         if(project.getTotalElements() == 0){
             throw  new NotFoundException(AppConstants.PROJECT_NOT_FOUND);

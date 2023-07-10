@@ -47,8 +47,12 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectResponse> retrieveProject(@PathVariable Long id) {
-        ProjectResponse apiResponse = projectService.findProjectById(id);
+    public ResponseEntity<ProjectResponse> retrieveProject(@PathVariable Long id, @RequestParam(defaultValue = "0", required = false)
+    Integer page,
+                                                           @RequestParam(defaultValue = "5", required = false)
+                                                               Integer pageSize) {
+        Pageable paging = PageRequest.of(page, pageSize);
+        ProjectResponse apiResponse = projectService.findProjectById(id,paging);
         return ResponseEntity.ok(apiResponse);
     }
 
