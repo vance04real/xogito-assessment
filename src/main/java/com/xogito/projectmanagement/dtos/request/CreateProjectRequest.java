@@ -1,14 +1,14 @@
 package com.xogito.projectmanagement.dtos.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@EqualsAndHashCode
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateProjectRequest {
 
     private String name;

@@ -6,7 +6,6 @@ import com.xogito.projectmanagement.dtos.request.UserProjectAssignmentRequest;
 import com.xogito.projectmanagement.dtos.response.ApiResponse;
 import com.xogito.projectmanagement.dtos.response.ProjectResponse;
 import com.xogito.projectmanagement.dtos.response.ProjectWithoutAssignedUsersResponse;
-import com.xogito.projectmanagement.dtos.response.UserResponse;
 import com.xogito.projectmanagement.entity.Project;
 import com.xogito.projectmanagement.exceptions.NotFoundException;
 import com.xogito.projectmanagement.exceptions.XogitoUserException;
@@ -17,7 +16,6 @@ import com.xogito.projectmanagement.utils.AppConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -85,7 +83,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse findProjectsWithNoUsersAssignedToThem(Pageable pageable) {
-        //TODO fix this method
         var retrievedProject = projectRepository.findProjectsWithNoUsersAssignedToThem(pageable);
         return  ProjectResponse.builder()
                 .message(AppConstants.PROJECT_RETRIEVED_SUCCESSFUL)

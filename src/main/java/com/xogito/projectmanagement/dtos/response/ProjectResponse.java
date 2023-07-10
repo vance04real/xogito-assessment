@@ -10,6 +10,6 @@ import org.springframework.data.domain.Page;
 @Data
 public class ProjectResponse extends ApiResponse{
 
-    private Page<Project> projectList;
+    Page<Project> projectList;
 
 }
