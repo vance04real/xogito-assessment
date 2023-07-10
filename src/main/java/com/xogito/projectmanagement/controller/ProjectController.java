@@ -88,6 +88,18 @@ public class ProjectController {
 
     }
 
+    @GetMapping("/retrieveProjects")
+    public ResponseEntity<ProjectResponse> retrieveProjects(@RequestParam(defaultValue = "0", required = false)
+                                                      Integer page,
+                                                      @RequestParam(defaultValue = "5", required = false)
+                                                      Integer pageSize) {
+        Pageable paging = PageRequest.of(page, pageSize);
+        ProjectResponse projectResponse = projectService.findAllProjects(paging);
+
+        return ResponseEntity.ok(projectResponse);
+
+    }
+
     @PostMapping("/assignUser")
     public ResponseEntity<ApiResponse> assignProject(@RequestBody UserProjectAssignmentRequest userProjectAssignmentRequest) {
 
@@ -95,6 +107,5 @@ public class ProjectController {
 
         return ResponseEntity.ok(apiResponse);
     }
-
 
 }
