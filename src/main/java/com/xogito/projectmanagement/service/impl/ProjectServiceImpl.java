@@ -6,6 +6,7 @@ import com.xogito.projectmanagement.dtos.request.UserProjectAssignmentRequest;
 import com.xogito.projectmanagement.dtos.response.ApiResponse;
 import com.xogito.projectmanagement.dtos.response.ProjectResponse;
 import com.xogito.projectmanagement.dtos.response.ProjectWithoutAssignedUsersResponse;
+import com.xogito.projectmanagement.dtos.response.UserResponse;
 import com.xogito.projectmanagement.entity.Project;
 import com.xogito.projectmanagement.exceptions.NotFoundException;
 import com.xogito.projectmanagement.exceptions.XogitoUserException;
@@ -16,6 +17,7 @@ import com.xogito.projectmanagement.utils.AppConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ApiResponse createProject(CreateProjectRequest createProjectRequest) {
         log.info("User Request received {}", createProjectRequest);
 
-       var optionalProject = projectRepository.findProjectByName(createProjectRequest.getName());
+       var optionalProject = projectRepository.findProjectByNameIgnoreCase(createProjectRequest.getName());
 
         if(optionalProject.isPresent()){
             throw new XogitoUserException(AppConstants.PROJECT_ALREADY_EXISTS);
@@ -56,7 +58,7 @@ public class ProjectServiceImpl implements ProjectService {
         return  ProjectWithoutAssignedUsersResponse.builder()
                 .message(AppConstants.PROJECT_RETRIEVED_SUCCESSFUL)
                 .projectList(retrievedProject)
-                .code(HttpStatus.CREATED.value())
+                .code(HttpStatus.OK.value())
                 .build();
     }
 
@@ -72,7 +74,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         return  ApiResponse.builder()
                 .message(AppConstants.PROJECT_ASSIGNED_TO_USER)
-                .code(HttpStatus.CREATED.value())
+                .code(HttpStatus.OK.value())
                 .build();
     }
 
@@ -83,14 +85,14 @@ public class ProjectServiceImpl implements ProjectService {
         return  ProjectResponse.builder()
                 .message(AppConstants.PROJECT_RETRIEVED_SUCCESSFUL)
                 //.projectList(retrievedProject)
-                .code(HttpStatus.CREATED.value())
+                .code(HttpStatus.OK.value())
                 .build();
     }
 
     @Override
     public ProjectResponse searchProjects(String name, Pageable pageable) {
         log.info("Name parameter received  {}", name);
-        var retrievedProjects = projectRepository.findProjectByName(name, pageable);
+        var retrievedProjects = projectRepository.findProjectByNameIgnoreCase(name, pageable);
         if(retrievedProjects.getTotalElements() == 0){
             log.info("No results found");
             return ProjectResponse.builder()
@@ -100,7 +102,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return ProjectResponse.builder()
                 .message(AppConstants.PROJECT_RETRIEVED_SUCCESSFUL)
-                .code(HttpStatus.CREATED.value())
+                .code(HttpStatus.OK.value())
                 .projectList(retrievedProjects)
                 .build();
     }
@@ -140,6 +142,25 @@ public class ProjectServiceImpl implements ProjectService {
         return ApiResponse.builder()
                 .message(AppConstants.PROJECT_UPDATE_SUCCESSFUL)
                 .code(HttpStatus.OK.value())
+                .build();
+    }
+
+    @Override
+    public ProjectResponse findAllProjects(Pageable pageable) {
+
+       var projects = projectRepository.findAll(pageable);
+
+        if(projects.getTotalElements() == 0){
+            return ProjectResponse.builder()
+                    .message(AppConstants.NO_RESULTS_FOUND)
+                    .code(HttpStatus.NO_CONTENT.value())
+                    .build();
+        }
+
+        return ProjectResponse.builder()
+                .message(AppConstants.USER_RETRIEVED_SUCCESSFUL)
+                .code(HttpStatus.OK.value())
+                .projectList(projects)
                 .build();
     }
 }

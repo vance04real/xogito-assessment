@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 @Data
 @SuperBuilder
 public class UserResponse extends ApiResponse{
+
     Page<User> users;
 
 }

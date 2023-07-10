@@ -18,4 +18,6 @@ public interface ProjectService {
     ProjectResponse  searchProjects(String name, Pageable pageable);
     ApiResponse deleteProject(Long id);
     ApiResponse updateProject(Long id, UpdateProjectRequest updateProjectRequest);
+
+    ProjectResponse findAllProjects(Pageable pageable);
 }

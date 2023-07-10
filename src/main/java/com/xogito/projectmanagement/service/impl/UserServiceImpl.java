@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse createUser(CreateUserRequest createUserRequest) {
 
-        var retrievedUser = userRepository.findUserByEmail(createUserRequest.getEmail());
+        var retrievedUser = userRepository.findUserByEmailIgnoreCase(createUserRequest.getEmail());
         if(retrievedUser.isPresent()){
             throw new XogitoUserException(AppConstants.USER_ALREADY_EXISTS);
         }
@@ -58,14 +58,14 @@ public class UserServiceImpl implements UserService {
 
         return UserResponse.builder()
                 .message(AppConstants.USER_RETRIEVED_SUCCESSFUL)
-                .code(HttpStatus.CREATED.value())
+                .code(HttpStatus.OK.value())
                 .users(users)
                 .build();
     }
 
     @Override
     public UserResponse searchUsers(String name, String email, Pageable pageable) {
-       var retrievedUsers = userRepository.findUserByNameAndEmail(name, email, pageable);
+       var retrievedUsers = userRepository.findUserByNameAndEmailIgnoreCase(name, email, pageable);
        if(retrievedUsers.getTotalElements() == 0){
            return UserResponse.builder()
                    .message(AppConstants.NO_RESULTS_FOUND)
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
        }
         return UserResponse.builder()
                 .message(AppConstants.USER_RETRIEVED_SUCCESSFUL)
-                .code(HttpStatus.CREATED.value())
+                .code(HttpStatus.OK.value())
                 .users(retrievedUsers)
                 .build();
     }

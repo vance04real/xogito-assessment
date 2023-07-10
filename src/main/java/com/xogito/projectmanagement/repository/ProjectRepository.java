@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository <Project, Long >{
-    Page<Project> findProjectByName(String name, Pageable pageable);
-    Optional<Project> findProjectByName(String name);
+    Page<Project> findProjectByNameIgnoreCase(String name, Pageable pageable);
+    Optional<Project> findProjectByNameIgnoreCase(String name);
     Page<ProjectProjection> findBy(Pageable pageable);
 
 }
