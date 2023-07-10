@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 
 @Service
 @RequiredArgsConstructor
@@ -96,8 +98,17 @@ public class UserServiceImpl implements UserService {
     public ApiResponse updateUser(Long id, UpdateUserRequest updateUserRequest) {
 
         var user = userRepository.findById(id).orElseThrow(()-> new NotFoundException(AppConstants.USER_NOT_FOUND));
-       user.setEmail(updateUserRequest.getEmail());
-       user.setName(updateUserRequest.getName());
+
+        if (Objects.nonNull(updateUserRequest.getName()) && !"".equalsIgnoreCase(updateUserRequest.getName())) {
+
+            user.setName(updateUserRequest.getName());
+        }
+
+        if (Objects.nonNull(updateUserRequest.getEmail()) && !"".equalsIgnoreCase(updateUserRequest.getEmail())) {
+
+            user.setEmail(updateUserRequest.getEmail());
+        }
+
        userRepository.save(user);
 
         return ApiResponse.builder()

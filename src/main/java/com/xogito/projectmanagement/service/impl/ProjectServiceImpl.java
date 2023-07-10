@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -120,9 +122,19 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ApiResponse updateProject(Long id, UpdateProjectRequest updateProjectRequest) {
+
         var project = projectRepository.findById(id).orElseThrow(()-> new NotFoundException(AppConstants.PROJECT_NOT_FOUND));
-        project.setDescription(updateProjectRequest.getDescription());
-        project.setName(updateProjectRequest.getName());
+
+        if (Objects.nonNull(updateProjectRequest.getName()) && !"".equalsIgnoreCase(updateProjectRequest.getName())) {
+
+            project.setName(updateProjectRequest.getName());
+        }
+
+        if (Objects.nonNull(updateProjectRequest.getDescription()) && !"".equalsIgnoreCase(updateProjectRequest.getDescription())) {
+
+            project.setDescription(updateProjectRequest.getDescription());
+        }
+
         projectRepository.save(project);
 
         return ApiResponse.builder()
