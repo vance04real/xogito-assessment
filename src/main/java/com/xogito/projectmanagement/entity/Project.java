@@ -1,5 +1,6 @@
 package com.xogito.projectmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -27,8 +28,11 @@ public class Project {
     @Column(nullable = false)
     @NotNull
     private String name;
+
     private String description;
+
     @ManyToMany(mappedBy = "assignedProjects")
+    @JsonIgnore
     private List<User> assignedUsers;
 
 }

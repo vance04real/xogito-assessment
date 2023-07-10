@@ -30,6 +30,7 @@ import java.util.Objects;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+
     private final UserRepository userRepository;
     @Override
     public ApiResponse createProject(CreateProjectRequest createProjectRequest) {
@@ -68,9 +69,13 @@ public class ProjectServiceImpl implements ProjectService {
 
         var retrievedUser = userRepository.findById(userProjectAssignmentRequest.getUserId()).orElseThrow(() -> new NotFoundException(AppConstants.USER_NOT_FOUND));
         var retrievedProject = projectRepository.findById(userProjectAssignmentRequest.getProjectId()).orElseThrow(() -> new NotFoundException(AppConstants.PROJECT_NOT_FOUND));
+
         retrievedProject.getAssignedUsers().add(retrievedUser);
+        retrievedUser.getAssignedProjects().add(retrievedProject);
 
         projectRepository.save(retrievedProject);
+
+        userRepository.save(retrievedUser);
 
         return  ApiResponse.builder()
                 .message(AppConstants.PROJECT_ASSIGNED_TO_USER)
@@ -79,12 +84,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectResponse findProjectsWithUnAssignedUsers(Pageable pageable) {
+    public ProjectResponse findProjectsWithNoUsersAssignedToThem(Pageable pageable) {
         //TODO fix this method
-        //var retrievedProject = projectRepository.findAllWithoutAssignedUsers(pageable);
+        var retrievedProject = projectRepository.findProjectsWithNoUsersAssignedToThem(pageable);
         return  ProjectResponse.builder()
                 .message(AppConstants.PROJECT_RETRIEVED_SUCCESSFUL)
-                //.projectList(retrievedProject)
+                .projectList(retrievedProject)
                 .code(HttpStatus.OK.value())
                 .build();
     }

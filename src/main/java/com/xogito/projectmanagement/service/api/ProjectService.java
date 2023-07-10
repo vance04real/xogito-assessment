@@ -14,7 +14,7 @@ public interface ProjectService {
     ApiResponse createProject(CreateProjectRequest createProjectRequest);
     ProjectWithoutAssignedUsersResponse findProjectsWithoutAssignedUsers(Pageable pageable);
     ApiResponse  assignProjectToUser(UserProjectAssignmentRequest userProjectAssignmentRequest);
-    ProjectResponse findProjectsWithUnAssignedUsers(Pageable pageable);
+    ProjectResponse findProjectsWithNoUsersAssignedToThem(Pageable pageable);
     ProjectResponse  searchProjects(String name, Pageable pageable);
     ApiResponse deleteProject(Long id);
     ApiResponse updateProject(Long id, UpdateProjectRequest updateProjectRequest);

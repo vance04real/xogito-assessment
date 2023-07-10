@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse searchUsers(String name, String email, Pageable pageable) {
-       var retrievedUsers = userRepository.findUserByNameAndEmailIgnoreCase(name, email, pageable);
+       var retrievedUsers = userRepository.findUserByNameIgnoreCaseAndEmailIgnoreCase(name, email, pageable);
        if(retrievedUsers.getTotalElements() == 0){
            return UserResponse.builder()
                    .message(AppConstants.NO_RESULTS_FOUND)

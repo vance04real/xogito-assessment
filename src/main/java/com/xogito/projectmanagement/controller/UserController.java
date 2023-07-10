@@ -37,12 +37,12 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<UserResponse> searchUser(@RequestBody CreateUserRequest createUserRequest, @RequestParam(defaultValue = "0", required = false)
+    public ResponseEntity<UserResponse> searchUser(@RequestParam String name, @RequestParam  String email, @RequestParam(defaultValue = "0", required = false)
     Integer page,
                                                    @RequestParam(defaultValue = "5", required = false)
                                                    Integer pageSize) {
         Pageable paging = PageRequest.of(page, pageSize);
-        UserResponse userResponse = userService.searchUsers(createUserRequest.getName(), createUserRequest.getEmail(), paging);
+        UserResponse userResponse = userService.searchUsers(name , email, paging);
 
         return ResponseEntity.ok(userResponse);
 

@@ -60,14 +60,14 @@ public class ProjectController {
     }
 
 
-    @GetMapping("/retrieveWithoutUnAssignedUsers")
+    @GetMapping("/retrieveProjectsWithoutNoUsersAssignedTo")
     public ResponseEntity<ProjectResponse> findUnAssignedProjects(@RequestParam(defaultValue = "0", required = false)
                                                                   Integer page,
                                                                   @RequestParam(defaultValue = "5", required = false)
                                                                   Integer pageSize) {
         Pageable paging = PageRequest.of(page, pageSize);
 
-        ProjectResponse projectsWithUnAssignedUsers = projectService.findProjectsWithUnAssignedUsers(paging);
+        ProjectResponse projectsWithUnAssignedUsers = projectService.findProjectsWithNoUsersAssignedToThem(paging);
 
         return ResponseEntity.ok(projectsWithUnAssignedUsers);
 

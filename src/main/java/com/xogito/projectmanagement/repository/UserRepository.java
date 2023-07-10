@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Page<User> findUserByNameAndEmailIgnoreCase(String name, String email, Pageable pageable);
+    Page<User> findUserByNameIgnoreCaseAndEmailIgnoreCase(String name, String email, Pageable pageable);
     Optional<User> findUserByEmailIgnoreCase(String email);
 
 }
