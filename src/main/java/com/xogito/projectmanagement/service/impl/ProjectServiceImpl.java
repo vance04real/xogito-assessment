@@ -123,6 +123,7 @@ public class ProjectServiceImpl implements ProjectService {
         var project = projectRepository.findById(id).orElseThrow(()-> new NotFoundException(AppConstants.PROJECT_NOT_FOUND));
         project.setDescription(updateProjectRequest.getDescription());
         project.setName(updateProjectRequest.getName());
+        projectRepository.save(project);
 
         return ApiResponse.builder()
                 .message(AppConstants.PROJECT_UPDATE_SUCCESSFUL)

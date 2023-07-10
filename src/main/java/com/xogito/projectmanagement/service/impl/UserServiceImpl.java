@@ -47,6 +47,13 @@ public class UserServiceImpl implements UserService {
 
         var users = userRepository.findAll(page);
 
+        if(users.getTotalElements() == 0){
+                return UserResponse.builder()
+                        .message(AppConstants.NO_RESULTS_FOUND)
+                        .code(HttpStatus.NO_CONTENT.value())
+                        .build();
+            }
+
         return UserResponse.builder()
                 .message(AppConstants.USER_RETRIEVED_SUCCESSFUL)
                 .code(HttpStatus.CREATED.value())
@@ -91,6 +98,7 @@ public class UserServiceImpl implements UserService {
         var user = userRepository.findById(id).orElseThrow(()-> new NotFoundException(AppConstants.USER_NOT_FOUND));
        user.setEmail(updateUserRequest.getEmail());
        user.setName(updateUserRequest.getName());
+       userRepository.save(user);
 
         return ApiResponse.builder()
                 .message(AppConstants.USER_UPDATE_SUCCESSFUL)
