@@ -1,7 +1,7 @@
 package com.xogito.projectmanagement.dtos.response;
 
-import com.assessment.userprojectassignment.entity.User;
-import lombok.Builder;
+
+import com.xogito.projectmanagement.entity.User;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.domain.Page;
