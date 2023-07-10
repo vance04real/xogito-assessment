@@ -32,7 +32,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserRepository userRepository;
     @Override
     public ApiResponse createProject(CreateProjectRequest createProjectRequest) {
-        log.info("User Request received {}", createProjectRequest);
+        log.info("Create Project Request received {}", createProjectRequest);
 
        var optionalProject = projectRepository.findProjectByNameIgnoreCase(createProjectRequest.getName());
 
@@ -115,7 +115,10 @@ public class ProjectServiceImpl implements ProjectService {
         var project = projectRepository.findProjectById(id, pageable);
 
         if(project.getTotalElements() == 0){
-            throw  new NotFoundException(AppConstants.PROJECT_NOT_FOUND);
+            return ProjectResponse.builder()
+                    .message(AppConstants.NO_RESULTS_FOUND)
+                    .code(HttpStatus.NO_CONTENT.value())
+                    .build();
         }
 
         return ProjectResponse.builder()

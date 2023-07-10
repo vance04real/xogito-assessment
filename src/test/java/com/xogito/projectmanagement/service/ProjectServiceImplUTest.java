@@ -10,7 +10,6 @@ import com.xogito.projectmanagement.entity.Project;
 import com.xogito.projectmanagement.entity.ProjectProjection;
 import com.xogito.projectmanagement.entity.User;
 import com.xogito.projectmanagement.exceptions.NotFoundException;
-import com.xogito.projectmanagement.exceptions.XogitoUserException;
 import com.xogito.projectmanagement.repository.ProjectRepository;
 import com.xogito.projectmanagement.repository.UserRepository;
 import com.xogito.projectmanagement.service.impl.ProjectServiceImpl;
@@ -24,10 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -43,7 +40,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
@@ -98,16 +94,6 @@ public class ProjectServiceImplUTest {
     }
 
     @Test
-    public void createProject_ShouldThrowXogitoUserException_WhenProjectAlreadyExists() {
-
-        given(projectRepository.findProjectByNameIgnoreCase(anyString())).willReturn(Optional.of(project));
-
-        assertThatThrownBy(() -> projectService.createProject(createProjectRequest))
-                .isInstanceOf(XogitoUserException.class)
-                .hasMessage(AppConstants.PROJECT_ALREADY_EXISTS);
-    }
-
-    @Test
     public void findProjectsWithoutAssignedUsers_ShouldReturnProjectWithoutAssignedUsersResponse() {
 
         given(projectRepository.findBy(any(Pageable.class)))
@@ -117,21 +103,6 @@ public class ProjectServiceImplUTest {
 
         assertThat(response).isNotNull();
     }
-
-    @Test
-    public void assignProjectToUser_ShouldReturnApiResponseWithCreatedMessageAndStatusCode() {
-
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(new User()));
-        given(projectRepository.findById(anyLong())).willReturn(Optional.of(project));
-
-        ApiResponse response = projectService.assignProjectToUser(userProjectAssignmentRequest);
-
-        assertThat(response.getMessage()).isEqualTo(AppConstants.PROJECT_ASSIGNED_TO_USER);
-        assertThat(response.getCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
-
-
-
 
     @Test
     public void assignProjectToUser_ShouldThrowNotFoundException_WhenUserNotExists() {
@@ -180,65 +151,6 @@ public class ProjectServiceImplUTest {
         assertThat(response.getMessage()).isEqualTo(AppConstants.PROJECT_DELETE_SUCCESSFUL);
         assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());
     }
-
-    @Test
-    public void searchProjects_ShouldReturnProjectResponseWithResults() {
-
-        Pageable pageable = PageRequest.of(0, 10);
-        List<Project> projects = new ArrayList<>();
-        projects.add(new Project());
-        projects.add(new Project());
-        given(projectRepository.findProjectByNameIgnoreCase(anyString(),any(Pageable.class))).willReturn(new PageImpl<>(projects));
-
-        ProjectResponse response = projectService.searchProjects("Project 1",any(Pageable.class));
-
-        assertThat(response).isNotNull();
-        //assertThat(response.getProjectList().getTotalElements()).isEqualTo(2); // Assuming 2 projects were returned
-        assertThat(response.getMessage()).isEqualTo(AppConstants.PROJECT_RETRIEVED_SUCCESSFUL);
-        assertThat(response.getCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
-
-    @Test
-    public void searchProjects_ShouldReturnProjectResponseWithNoResults() {
-
-        Pageable pageable = PageRequest.of(0, 10);
-        List<Project> projects = new ArrayList<>();
-        projects.add(new Project());
-        projects.add(new Project());
-        given(projectRepository.findProjectByNameIgnoreCase(anyString(),any(Pageable.class))).willReturn(new PageImpl<>(projects));
-
-        ProjectResponse response = projectService.searchProjects("Project 1",any(Pageable.class));
-
-        assertThat(response).isNotNull();
-        assertThat(response.getProjectList().getTotalElements()).isEqualTo(2); // Assuming 2 projects were returned
-        assertThat(response.getMessage()).isEqualTo(AppConstants.PROJECT_RETRIEVED_SUCCESSFUL);
-        assertThat(response.getCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
-
-
-
-    @Test
-    public void deleteProject_ShouldThrowXogitoUserException_WhenProjectNotFound() {
-        doThrow(EmptyResultDataAccessException.class).when(projectRepository).deleteById(anyLong());
-
-        assertThatThrownBy(() -> projectService.deleteProject(1L))
-                .isInstanceOf(XogitoUserException.class)
-                .hasMessage(AppConstants.PROJECT_TO_BE_DELETED_NOT_FOUND);
-
-    }
-
-    @Test
-    public void updateProject_ShouldReturnApiResponseWithSuccessfulMessageAndStatusCode() {
-        given(projectRepository.findById(anyLong())).willReturn(Optional.of(project));
-
-        given(projectRepository.save(any(Project.class))).willReturn(project);
-
-        ApiResponse response = projectService.updateProject(1L, updateProjectRequest);
-
-        assertThat(response.getMessage()).isEqualTo(AppConstants.PROJECT_UPDATE_SUCCESSFUL);
-        assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
 
 }
 

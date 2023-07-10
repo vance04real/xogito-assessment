@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     @Override
     public ApiResponse createUser(CreateUserRequest createUserRequest) {
-
+        log.info("User Request received {}", createUserRequest);
         var retrievedUser = userRepository.findUserByEmailIgnoreCase(createUserRequest.getEmail());
         if(retrievedUser.isPresent()){
             throw new XogitoUserException(AppConstants.USER_ALREADY_EXISTS);
@@ -100,7 +100,10 @@ public class UserServiceImpl implements UserService {
         var user = userRepository.findUserById(id, pageable);
 
         if(user.getTotalElements() == 0){
-            throw  new NotFoundException(AppConstants.PROJECT_NOT_FOUND);
+            return UserResponse.builder()
+                    .message(AppConstants.NO_RESULTS_FOUND)
+                    .code(HttpStatus.NO_CONTENT.value())
+                    .build();
         }
 
         return UserResponse.builder()
@@ -132,4 +135,5 @@ public class UserServiceImpl implements UserService {
                 .code(HttpStatus.OK.value())
                 .build();
     }
+
 }
